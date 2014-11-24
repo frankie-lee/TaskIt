@@ -2,7 +2,7 @@
 //  TaskModel.swift
 //  TaskIt
 //
-//  Created by Frank Lee on 2014-09-30.
+//  Created by Frank Lee on 2014-11-24.
 //  Copyright (c) 2014 franklee. All rights reserved.
 //
 
@@ -16,5 +16,5 @@ class TaskModel: NSManagedObject {
     @NSManaged var date: NSDate
     @NSManaged var subtask: String
     @NSManaged var task: String
-    
+
 }

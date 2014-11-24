@@ -11,11 +11,9 @@ import CoreData
 
 class AddTaskViewController: UIViewController {
 
-    
     @IBOutlet weak var taskTextField: UITextField!
     @IBOutlet weak var subtaskTextField: UITextField!
     @IBOutlet weak var dueDatePicker: UIDatePicker!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

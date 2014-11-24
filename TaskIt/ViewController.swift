@@ -34,7 +34,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         fetchedResultsController.delegate = self //this viewcontroller instance (can call functions in self)
         fetchedResultsController.performFetch(nil) //tell fetch results controller to start monitoring changes (grab initial batch of entities)
     }
-
+    
     //occurs everytime this viewcontroller is presented on screen. Refresh all the info in our table view.
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -73,9 +73,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return fetchedResultsController.sections![section].numberOfObjects //returns number of rows in a section
     }
-
+    
     //passing in tableview parameter: ie. tableView.deque... etc.
-
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         //creates reusable tableView cell, using "myCell" of type TaskCell (type cast)
@@ -102,11 +102,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        if section == 0 {
-            return "To Do"
+        if fetchedResultsController.sections?.count == 1 {
+            let fetchedObjects = fetchedResultsController.fetchedObjects!
+            
+            let testTask:TaskModel = fetchedObjects[0] as TaskModel
+            
+            if testTask.completed == true {
+                return "Completed"
+            }
+            else {
+                return "To do"
+            }
         }
+            
         else {
-            return "Completed"
+            if section == 0 {
+                return "To Do"
+            }
+            else {
+                return "Completed"
+            }
         }
     }
     
@@ -114,11 +129,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         let thisTask = fetchedResultsController.objectAtIndexPath(indexPath) as TaskModel //returns the object at index path
         
-        if indexPath.section == 0 {
-            thisTask.completed = true
-        }
-        else {
+        if thisTask.completed == true {
             thisTask.completed = false
+        } else {
+            thisTask.completed = true
         }
         
         (UIApplication.sharedApplication().delegate as AppDelegate).saveContext() //save whatever changes made to entity
@@ -134,10 +148,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //request returns NSFetchRequest instance
     func taskFetchRequest() -> NSFetchRequest {
-        let fetchRequest = NSFetchRequest(entityName: "TaskModel") //grabbing entity instance
-        let sortDescriptor = NSSortDescriptor(key: "date", ascending: true) //using date as the key sort
-        let completedDescriptor = NSSortDescriptor(key: "completed", ascending: true)
-    
+        let fetchRequest = NSFetchRequest(entityName:"TaskModel") //grabbing entity instance
+        let sortDescriptor = NSSortDescriptor(key:"date", ascending: true) //using date as the key sort
+        let completedDescriptor = NSSortDescriptor(key:"completed", ascending: true)
+        
         fetchRequest.sortDescriptors = [completedDescriptor, sortDescriptor] //allows multiple sort descriptors
         
         return fetchRequest //return this request
